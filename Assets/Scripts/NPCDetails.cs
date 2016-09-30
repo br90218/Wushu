@@ -2,8 +2,10 @@
 using System.Collections;
 
 public class NPCDetails : MonoBehaviour {
+	[Tooltip("The maximum health allowed for this being (Unit)")] 
 	public int maximumHealth = 100;
-	public int recoverSpeed = 5; //The Healing Speed. (Unit/s)
+	[Tooltip("The healing speed of this being (Unit/sec)")] 
+	public int recoverSpeed = 5; 
 	private float health;
 	private Animator animator;
 	private AnimatorStateInfo currentHealthState;
@@ -29,14 +31,10 @@ public class NPCDetails : MonoBehaviour {
 		animator.SetFloat ("distance", distance);
 
 		if (currHealthStateHash == Animator.StringToHash ("Health.Idle")) {
-			Debug.Log (gameObject.name + " is Idle");
 		} else if (currHealthStateHash == Animator.StringToHash ("Health.Panicking")) {
-			Debug.Log (gameObject.name + " is Panicking.");
 		} else if (currHealthStateHash == Animator.StringToHash ("Health.Healing")) {
-			Debug.Log (gameObject.name + " is Healing.");
 			Heal ();
 		} else if (currHealthStateHash == Animator.StringToHash ("Health.Death")) {
-			Debug.Log (gameObject.name + " is Dead.");
 			Destroy (gameObject);
 		}
 
@@ -56,17 +54,24 @@ public class NPCDetails : MonoBehaviour {
 		}
 		
 	}
-
+		
 	public void Hurt(float damage) {
 		health -= damage;
 		StartCoroutine (triggerSetReset ("hurt"));
 	}
 
+	/// <summary>
+	/// Heals this being with its designated recovery speed.
+	/// </summary>
 	public void Heal() {
 		health = Mathf.Min (maximumHealth, health + Time.deltaTime * recoverSpeed);
 	}
 
-	// Recovers health instantly, maybe for a potion.
+	/// <summary>
+	/// Heals this being immediately by a value.
+	/// Maybe applicable when using a potion or healing spell.
+	/// </summary>
+	/// <param name="instant">healing value</param>
 	public void Heal(int instant) { 
 		health += instant;
 	}
