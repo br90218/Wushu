@@ -29,6 +29,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 		[SerializeField] private GameObject projectile;
+		[SerializeField] private float m_ProjectileForce;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -94,10 +95,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
 			m_Shoot = Input.GetMouseButtonDown (1);
-			if (m_Shoot) {
-				GameObject projectile = (GameObject) Instantiate (this.projectile, this.transform.Find ("GameObject").position, Quaternion.identity);
-				projectile.GetComponent<Rigidbody> ().AddForce (m_Aim.direction * 100, ForceMode.Impulse);
-			}
+
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
@@ -127,7 +125,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MoveDir.x = desiredMove.x*speed;
             m_MoveDir.z = desiredMove.z*speed;
 
-
+			if (m_Shoot) {
+				GameObject projectile = (GameObject) Instantiate (this.projectile, this.transform.Find ("GameObject").position, Quaternion.identity);
+				projectile.GetComponent<Rigidbody> ().AddForce (m_Aim.direction * m_ProjectileForce, ForceMode.Impulse);
+				//GetComponent<NPCDetails> ().Attack ();
+			}
 			if (m_CharacterController.isGrounded) {  //All below is on the ground
 				m_MoveDir.y = -m_StickToGroundForce;
 
